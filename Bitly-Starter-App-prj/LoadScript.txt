@@ -1,0 +1,293 @@
+﻿///$tab Change Log
+/*
+
+0.0.8 - 24/09/15
+----------------
+* Initial version.
+
+*/
+///$tab Config
+SET ThousandSep=',';
+SET DecimalSep='.';
+SET MoneyThousandSep=',';
+SET MoneyDecimalSep='.';
+SET MoneyFormat='£#,##0.00;-£#,##0.00';
+SET TimeFormat='hh:mm:ss';
+SET DateFormat='DD/MM/YYYY';
+SET TimestampFormat='DD/MM/YYYY hh:mm:ss[.fff]';
+SET MonthNames='Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec';
+SET DayNames='Mon;Tue;Wed;Thu;Fri;Sat;Sun';
+///$tab Get Links
+SUB getLinks
+
+	// START SETUP
+	
+	// Enter a list of Twitter usernames in the inline table below.
+	UserNames:
+	LOAD * INLINE [
+		UserName
+		bitly
+		];
+	
+	// Set the max number of user timeline pages to retrieve.
+	LET vMaxNoPages = 10;
+	
+	// You can set this to your own app name.
+	LET vQVSourceAppId = 'Bitly_Demo_App';
+	
+	// This could be updated to point to a different server / port.
+	LET vBaseUrl = 'http://localhost:5555';
+	
+	// This could be &loadAccessToken=1a2b3c4d for QVSource web edition.
+	LET vLoadAccessToken = '';
+
+	// END SETUP
+
+	LET noRows = NoOfRows('UserNames');
+	
+	for i=0 to $(noRows)-1
+		
+		let userName = peek('UserName', $(i), 'UserNames');
+		
+		TRACE 'Getting link data for $(userName)...';
+		
+		TwitterConnectorV2_UserTimeline:
+		LOAD		
+			'$(userName)' as UserTimelineuserName,	
+		    id as UserTimelineid,
+		    created_at as UserTimelinecreated_at,
+		    timestamp#(mid(created_at, 9, 2) & '-' & mid(created_at, 5, 3) & '-' & mid(created_at, 27, 4) & ' ' & mid(created_at, 12, 8), 'DD-MMM-YYYY hh:mm:ss') as UserTimelinecreated_at_timestamp,
+		    date#(mid(created_at, 9, 2) & '-' & mid(created_at, 5, 3) & '-' & mid(created_at, 27, 4), 'DD-MMM-YYYY') as UserTimelinecreated_at_date,
+		    time#(mid(created_at, 12, 8), 'hh:mm:ss') as UserTimelinecreated_at_time,
+		    text as UserTimelinetext,
+		    lang as UserTimelinelang,
+		    source as UserTimelinesource,
+		    truncated as UserTimelinetruncated,
+		    in_reply_to_screen_name as UserTimelinein_reply_to_screen_name,
+		    in_reply_to_status_id as UserTimelinein_reply_to_status_id,
+		    in_reply_to_user_id as UserTimelinein_reply_to_user_id,
+		    retweet_count as UserTimelineretweet_count,
+		    favorite_count as UserTimelinefavorite_count,
+		    retweeted as UserTimelineretweeted,
+		    favorited as UserTimelinefavorited,
+		    possibly_sensitive as UserTimelinepossibly_sensitive,
+		    hashtag_count as UserTimelinehashtag_count,
+		    hash_tags as UserTimelinehash_tags,
+		    first_hash_tag as UserTimelinefirst_hash_tag,
+		    url_count as UserTimelineurl_count,
+		    expanded_urls as UserTimelineexpanded_urls,
+		    first_expanded_url as UserTimelinefirst_expanded_url,
+		    user_mentions_count as UserTimelineuser_mentions_count,
+		    user_mentions as UserTimelineuser_mentions,
+		    first_user_mention as UserTimelinefirst_user_mention,
+		    media_count as UserTimelinemedia_count,
+		    media_expanded_urls as UserTimelinemedia_expanded_urls,
+		    first_media_expanded_url as UserTimelinefirst_media_expanded_url,
+		    symbols_count as UserTimelinesymbols_count,
+		    symbols as UserTimelinesymbols,
+		    first_symbol as UserTimelinefirst_symbol,
+		    media_photo_count as UserTimelinemedia_photo_count,
+		    media_photo_urls as UserTimelinemedia_photo_urls,
+		    first_media_photo_url as UserTimelinefirst_media_photo_url,
+		    user_id as UserTimelineuser_id,
+		    user_name as UserTimelineuser_name,
+		    user_screen_name as UserTimelineuser_screen_name,
+		    user_location as UserTimelineuser_location,
+		    user_profile_image_url as UserTimelineuser_profile_image_url,
+		    user_description as UserTimelineuser_description,
+		    user_url as UserTimelineuser_url,
+		    user_geo_enabled as UserTimelineuser_geo_enabled,
+		    user_protected as UserTimelineuser_protected,
+		    user_followers_count as UserTimelineuser_followers_count,
+		    user_friends_count as UserTimelineuser_friends_count,
+		    user_listed_count as UserTimelineuser_listed_count,
+		    user_favourites_count as UserTimelineuser_favourites_count,
+		    user_statuses_count as UserTimelineuser_statuses_count,
+		    user_created_at as UserTimelineuser_created_at,
+		    timestamp#(mid(user_created_at, 9, 2) & '-' & mid(user_created_at, 5, 3) & '-' & mid(user_created_at, 27, 4) & ' ' & mid(user_created_at, 12, 8), 'DD-MMM-YYYY hh:mm:ss') as UserTimelineuser_user_created_at_timestamp,
+		    date#(mid(user_created_at, 9, 2) & '-' & mid(user_created_at, 5, 3) & '-' & mid(user_created_at, 27, 4), 'DD-MMM-YYYY') as UserTimelineuser_user_created_at_date,
+		    time#(mid(user_created_at, 12, 8), 'hh:mm:ss') as UserTimelineuser_user_created_at_time,
+		    user_utc_offset as UserTimelineuser_utc_offset,
+		    user_time_zone as UserTimelineuser_time_zone,
+		    user_verified as UserTimelineuser_verified,
+		    user_lang as UserTimelineuser_lang,
+		    user_follow_request_sent as UserTimelineuser_follow_request_sent,
+		    user_is_translator as UserTimelineuser_is_translator,
+		    user_following as UserTimelineuser_following,
+		    user_notifications as UserTimelineuser_notifications,
+		    place_id as UserTimelineplace_id,
+		    place_url as UserTimelineplace_url,
+		    place_place_type as UserTimelineplace_place_type,
+		    place_name as UserTimelineplace_name,
+		    place_full_name as UserTimelineplace_full_name,
+		    place_country_code as UserTimelineplace_country_code,
+		    place_country as UserTimelineplace_country,
+		    place_bounding_box_type as UserTimelineplace_bounding_box_type,
+		    place_attributes as UserTimelineplace_attributes,
+		    geo_type as UserTimelinegeo_type,
+		    geo_latitude as UserTimelinegeo_latitude,
+		    geo_longitude as UserTimelinegeo_longitude,
+		    coordinates_type as UserTimelinecoordinates_type,
+		    coordinates_latitude as UserTimelinecoordinates_latitude,
+		    coordinates_longitude as UserTimelinecoordinates_longitude,
+		    retweeted_status_id as UserTimelineretweeted_status_id,
+		    retweeted_status_created_at as UserTimelineretweeted_status_created_at,
+		    timestamp#(mid(retweeted_status_created_at, 9, 2) & '-' & mid(retweeted_status_created_at, 5, 3) & '-' & mid(retweeted_status_created_at, 27, 4) & ' ' & mid(retweeted_status_created_at, 12, 8), 'DD-MMM-YYYY hh:mm:ss') as UserTimelineretweeted_status_retweeted_status_created_at_timestamp,
+		    date#(mid(retweeted_status_created_at, 9, 2) & '-' & mid(retweeted_status_created_at, 5, 3) & '-' & mid(retweeted_status_created_at, 27, 4), 'DD-MMM-YYYY') as UserTimelineretweeted_status_retweeted_status_created_at_date,
+		    time#(mid(retweeted_status_created_at, 12, 8), 'hh:mm:ss') as UserTimelineretweeted_status_retweeted_status_created_at_time,
+		    retweeted_status_text as UserTimelineretweeted_status_text,
+		    retweeted_status_lang as UserTimelineretweeted_status_lang,
+		    retweeted_status_source as UserTimelineretweeted_status_source,
+		    retweeted_status_truncated as UserTimelineretweeted_status_truncated,
+		    retweeted_status_in_reply_to_screen_name as UserTimelineretweeted_status_in_reply_to_screen_name,
+		    retweeted_status_in_reply_to_status_id as UserTimelineretweeted_status_in_reply_to_status_id,
+		    retweeted_status_in_reply_to_user_id as UserTimelineretweeted_status_in_reply_to_user_id,
+		    retweeted_status_retweet_count as UserTimelineretweeted_status_retweet_count,
+		    retweeted_status_favorite_count as UserTimelineretweeted_status_favorite_count,
+		    retweeted_status_retweeted as UserTimelineretweeted_status_retweeted,
+		    retweeted_status_favorited as UserTimelineretweeted_status_favorited,
+		    retweeted_status_possibly_sensitive as UserTimelineretweeted_status_possibly_sensitive,
+		    retweeted_status_hashtag_count as UserTimelineretweeted_status_hashtag_count,
+		    retweeted_status_hash_tags as UserTimelineretweeted_status_hash_tags,
+		    retweeted_status_first_hash_tag as UserTimelineretweeted_status_first_hash_tag,
+		    retweeted_status_url_count as UserTimelineretweeted_status_url_count,
+		    retweeted_status_expanded_urls as UserTimelineretweeted_status_expanded_urls,
+		    retweeted_status_first_expanded_url as UserTimelineretweeted_status_first_expanded_url,
+		    retweeted_status_user_mentions_count as UserTimelineretweeted_status_user_mentions_count,
+		    retweeted_status_user_mentions as UserTimelineretweeted_status_user_mentions,
+		    retweeted_status_first_user_mention as UserTimelineretweeted_status_first_user_mention,
+		    retweeted_status_media_count as UserTimelineretweeted_status_media_count,
+		    retweeted_status_media_expanded_urls as UserTimelineretweeted_status_media_expanded_urls,
+		    retweeted_status_first_media_expanded_url as UserTimelineretweeted_status_first_media_expanded_url,
+		    retweeted_status_symbols_count as UserTimelineretweeted_status_symbols_count,
+		    retweeted_status_symbols as UserTimelineretweeted_status_symbols,
+		    retweeted_status_first_symbol as UserTimelineretweeted_status_first_symbol,
+		    retweeted_status_media_photo_count as UserTimelineretweeted_status_media_photo_count,
+		    retweeted_status_media_photo_urls as UserTimelineretweeted_status_media_photo_urls,
+		    retweeted_status_first_media_photo_url as UserTimelineretweeted_status_first_media_photo_url,
+		    retweeted_status_user_id as UserTimelineretweeted_status_user_id,
+		    retweeted_status_user_name as UserTimelineretweeted_status_user_name,
+		    retweeted_status_user_screen_name as UserTimelineretweeted_status_user_screen_name,
+		    retweeted_status_user_location as UserTimelineretweeted_status_user_location,
+		    retweeted_status_user_profile_image_url as UserTimelineretweeted_status_user_profile_image_url,
+		    retweeted_status_user_description as UserTimelineretweeted_status_user_description,
+		    retweeted_status_user_url as UserTimelineretweeted_status_user_url,
+		    retweeted_status_user_geo_enabled as UserTimelineretweeted_status_user_geo_enabled,
+		    retweeted_status_user_protected as UserTimelineretweeted_status_user_protected,
+		    retweeted_status_user_followers_count as UserTimelineretweeted_status_user_followers_count,
+		    retweeted_status_user_friends_count as UserTimelineretweeted_status_user_friends_count,
+		    retweeted_status_user_listed_count as UserTimelineretweeted_status_user_listed_count,
+		    retweeted_status_user_favourites_count as UserTimelineretweeted_status_user_favourites_count,
+		    retweeted_status_user_statuses_count as UserTimelineretweeted_status_user_statuses_count,
+		    retweeted_status_user_created_at as UserTimelineretweeted_status_user_created_at,
+		    timestamp#(mid(retweeted_status_user_created_at, 9, 2) & '-' & mid(retweeted_status_user_created_at, 5, 3) & '-' & mid(retweeted_status_user_created_at, 27, 4) & ' ' & mid(retweeted_status_user_created_at, 12, 8), 'DD-MMM-YYYY hh:mm:ss') as UserTimelineretweeted_status_user_retweeted_status_user_created_at_timestamp,
+		    date#(mid(retweeted_status_user_created_at, 9, 2) & '-' & mid(retweeted_status_user_created_at, 5, 3) & '-' & mid(retweeted_status_user_created_at, 27, 4), 'DD-MMM-YYYY') as UserTimelineretweeted_status_user_retweeted_status_user_created_at_date,
+		    time#(mid(retweeted_status_user_created_at, 12, 8), 'hh:mm:ss') as UserTimelineretweeted_status_user_retweeted_status_user_created_at_time,
+		    retweeted_status_user_utc_offset as UserTimelineretweeted_status_user_utc_offset,
+		    retweeted_status_user_time_zone as UserTimelineretweeted_status_user_time_zone,
+		    retweeted_status_user_verified as UserTimelineretweeted_status_user_verified,
+		    retweeted_status_user_lang as UserTimelineretweeted_status_user_lang,
+		    retweeted_status_user_follow_request_sent as UserTimelineretweeted_status_user_follow_request_sent,
+		    retweeted_status_user_is_translator as UserTimelineretweeted_status_user_is_translator,
+		    retweeted_status_user_following as UserTimelineretweeted_status_user_following,
+		    retweeted_status_user_notifications as UserTimelineretweeted_status_user_notifications,
+		    retweeted_status_place_id as UserTimelineretweeted_status_place_id,
+		    retweeted_status_place_url as UserTimelineretweeted_status_place_url,
+		    retweeted_status_place_place_type as UserTimelineretweeted_status_place_place_type,
+		    retweeted_status_place_name as UserTimelineretweeted_status_place_name,
+		    retweeted_status_place_full_name as UserTimelineretweeted_status_place_full_name,
+		    retweeted_status_place_country_code as UserTimelineretweeted_status_place_country_code,
+		    retweeted_status_place_country as UserTimelineretweeted_status_place_country,
+		    retweeted_status_place_bounding_box_type as UserTimelineretweeted_status_place_bounding_box_type,
+		    retweeted_status_place_attributes as UserTimelineretweeted_status_place_attributes,
+		    retweeted_status_geo_type as UserTimelineretweeted_status_geo_type,
+		    retweeted_status_geo_latitude as UserTimelineretweeted_status_geo_latitude,
+		    retweeted_status_geo_longitude as UserTimelineretweeted_status_geo_longitude,
+		    retweeted_status_coordinates_type as UserTimelineretweeted_status_coordinates_type,
+		    retweeted_status_coordinates_latitude as UserTimelineretweeted_status_coordinates_latitude,
+		    retweeted_status_coordinates_longitude as UserTimelineretweeted_status_coordinates_longitude
+		FROM
+			[$(vBaseUrl)/QVSource/TwitterConnectorV2/?table=UserTimeline&userName=$(userName)&maxNoPages=$(vMaxNoPages)&appId=$(vQVSourceAppId)$(vLoadAccessToken)]
+		(qvx);
+	
+	NEXT
+		   
+	LinksToAnalyse:	   
+	// We want distinct urls (a url can be tweeted multiple times).
+	LOAD Distinct
+		UserTimelinefirst_expanded_url as Analyse_short_url,
+		UserTimelineuserName as Analyse_userName
+	RESIDENT
+		TwitterConnectorV2_UserTimeline
+	WHERE
+		// We only pick up valid Bitly links.
+		WildMatch(UserTimelinefirst_expanded_url, '*bit.ly*', '*j.mp*', '*bitly*.com') > 0;
+
+ENDSUB
+///$tab Get Bitly Stats
+SUB getBitlyStats
+
+	LET noRows = NoOfRows('LinksToAnalyse');
+	
+	TRACE 'Analysing $(noRows) links...';
+	
+	FOR i=0 to $(noRows)-1
+	
+		LET short_url = peek('Analyse_short_url', $(i), 'LinksToAnalyse');
+		
+		BitlyConnectorV2_Clicks:
+		LOAD
+			'$(short_url)' as Analyse_short_url,
+		    link_clicks as Clickslink_clicks
+		FROM
+		[$(vBaseUrl)/QVSource/BitlyConnectorV2/?table=Clicks&url=$(short_url)&appId=$(vQVSourceAppId)$(vLoadAccessToken)]
+		(qvx);
+		
+		BitlyConnectorV2_Countries:
+		LOAD
+			'$(short_url)' as Analyse_short_url,
+		    country as Countriescountry,
+		    clicks as Countriesclicks
+		FROM
+		[$(vBaseUrl)/QVSource/BitlyConnectorV2/?table=Countries&url=$(short_url)&appId=$(vQVSourceAppId)$(vLoadAccessToken)]
+		(qvx);
+		
+		BitlyConnectorV2_Referrers:
+		LOAD
+			'$(short_url)' as Analyse_short_url,
+		    referrer as Referrersreferrer,
+		    referrer_app as Referrersreferrer_app,
+		    clicks as Referrersclicks
+		FROM
+		[$(vBaseUrl)/QVSource/BitlyConnectorV2/?table=Referrers&url=$(short_url)&appId=$(vQVSourceAppId)$(vLoadAccessToken)]
+		(qvx);
+		
+		BitlyConnectorV2_Expand:
+		LOAD
+			'$(short_url)' as Analyse_short_url,
+		    short_url as Expandshort_url,
+		    long_url as Expandlong_url,
+		    user_hash as Expanduser_hash,
+		    global_hash as Expandglobal_hash
+		FROM
+		[$(vBaseUrl)/QVSource/BitlyConnectorV2/?table=Expand&url=$(short_url)&appId=$(vQVSourceAppId)$(vLoadAccessToken)]
+		(qvx);
+		
+		BitlyConnectorV2_ClicksByDay:
+		LOAD
+			'$(short_url)' as Analyse_short_url,
+		    day_start as ClicksByDayday_start,
+		    day_start_utc as ClicksByDayday_start_utc,
+		    timestamp#(day_start_utc, 'DD-MM-YYYY hh:mm:ss') as ClicksByDayday_start_utc_qlik_timestamp,
+		    date#(left(day_start_utc, 10), 'DD-MM-YYYY') as ClicksByDayday_start_utc_qlik_date,
+		    clicks as ClicksByDayclicks
+		FROM
+		[$(vBaseUrl)/QVSource/BitlyConnectorV2/?table=ClicksByDay&url=$(short_url)&appId=$(vQVSourceAppId)$(vLoadAccessToken)]
+		(qvx);
+		
+	NEXT
+
+ENDSUB
+///$tab Main
+call getLinks;
+call getBitlyStats;

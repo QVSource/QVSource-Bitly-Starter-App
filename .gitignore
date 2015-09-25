@@ -1,0 +1,4 @@
+# Use this file type to include sensitive information in a QlikView/Qlik Sense script.
+credentials.txt
+*.qvd
+*.log
