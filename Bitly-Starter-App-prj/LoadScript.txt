@@ -221,7 +221,7 @@ SUB getLinks
 		TwitterConnectorV2_UserTimeline
 	WHERE
 		// We only pick up valid Bitly links.
-		WildMatch(UserTimelinefirst_expanded_url, '*bit.ly*', '*j.mp*', '*bitly*.com') > 0 AND lower(UserTimelinefirst_expanded_url) <> 'http://bitly.com';
+		WildMatch(UserTimelinefirst_expanded_url, '*bit.ly*', '*j.mp*', '*://bitly.com/*') > 0;
 
 ENDSUB
 ///$tab Get Bitly Stats
