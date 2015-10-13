@@ -623,7 +623,7 @@
     <ChartDimensionDataDef>
       <PseudoDef>
         <Name>Referrersreferrer</Name>
-        <Type>NOT_PRESENT</Type>
+        <Type>PRESENT</Type>
       </PseudoDef>
       <Title>
         <v>Referrer</v>
@@ -1962,7 +1962,6 @@
   <TableProperties>
     <VerticalLabels>false</VerticalLabels>
     <ColWidths>
-      <int>300</int>
       <int>300</int>
     </ColWidths>
     <Striping>

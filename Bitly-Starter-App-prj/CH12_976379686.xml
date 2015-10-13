@@ -623,7 +623,7 @@
     <ChartDimensionDataDef>
       <PseudoDef>
         <Name>UserTimelinecreated_at_date</Name>
-        <Type>NOT_PRESENT</Type>
+        <Type>PRESENT</Type>
       </PseudoDef>
       <Title>
         <v>Created date</v>
@@ -1960,7 +1960,6 @@
   <TableProperties>
     <VerticalLabels>false</VerticalLabels>
     <ColWidths>
-      <int>300</int>
       <int>300</int>
     </ColWidths>
     <Striping>

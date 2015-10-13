@@ -1243,7 +1243,7 @@
     <ChartDimensionDataDef>
       <PseudoDef>
         <Name>Analyse_short_url</Name>
-        <Type>NOT_PRESENT</Type>
+        <Type>PRESENT</Type>
       </PseudoDef>
       <Title>
         <v>Short link</v>
@@ -2644,7 +2644,6 @@
   <TableProperties>
     <VerticalLabels>false</VerticalLabels>
     <ColWidths>
-      <int>481</int>
       <int>2356</int>
       <int>413</int>
     </ColWidths>
