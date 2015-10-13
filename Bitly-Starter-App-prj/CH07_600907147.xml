@@ -3975,6 +3975,8 @@
   <TableProperties>
     <VerticalLabels>false</VerticalLabels>
     <ColWidths>
+      <int>378</int>
+      <int>272</int>
       <int>1172</int>
       <int>772</int>
       <int>334</int>
