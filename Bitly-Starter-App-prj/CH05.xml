@@ -623,7 +623,7 @@
     <ChartDimensionDataDef>
       <PseudoDef>
         <Name>ClicksByDayday_start_utc_qlik_date</Name>
-        <Type>NOT_PRESENT</Type>
+        <Type>PRESENT</Type>
       </PseudoDef>
       <Title>
         <v>Date</v>

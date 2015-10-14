@@ -250,7 +250,7 @@
   </Layout>
   <Def>
     <Name>Analyse_userName</Name>
-    <Type>NOT_PRESENT</Type>
+    <Type>PRESENT</Type>
   </Def>
   <Title>
     <v>UserName</v>

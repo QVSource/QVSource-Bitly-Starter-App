@@ -1243,7 +1243,7 @@
     <ChartDimensionDataDef>
       <PseudoDef>
         <Name>Analyse_short_url</Name>
-        <Type>NOT_PRESENT</Type>
+        <Type>PRESENT</Type>
       </PseudoDef>
       <Title>
         <v>Short link</v>

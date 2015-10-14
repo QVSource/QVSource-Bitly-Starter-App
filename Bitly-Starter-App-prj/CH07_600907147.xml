@@ -2261,7 +2261,7 @@
     <ChartDimensionDataDef>
       <PseudoDef>
         <Name>UserTimelineid</Name>
-        <Type>NOT_PRESENT</Type>
+        <Type>PRESENT</Type>
       </PseudoDef>
       <Title>
         <v>Tweet id</v>
@@ -2446,7 +2446,7 @@
     <ChartDimensionDataDef>
       <PseudoDef>
         <Name>UserTimelinecreated_at_date</Name>
-        <Type>NOT_PRESENT</Type>
+        <Type>PRESENT</Type>
       </PseudoDef>
       <Title>
         <v>Created at</v>
