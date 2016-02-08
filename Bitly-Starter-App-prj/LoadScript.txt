@@ -27,7 +27,6 @@ SUB getLinks
 	LOAD * INLINE [
 		UserName
 		bitly
-		qvsource
 		];
 	
 	// Set the max number of user timeline pages to retrieve.
