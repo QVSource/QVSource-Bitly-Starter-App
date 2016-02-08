@@ -221,7 +221,9 @@ SUB getLinks
 		TwitterConnectorV2_UserTimeline
 	WHERE
 		// We only pick up valid Bitly links.
-		WildMatch(UserTimelinefirst_expanded_url, '*bit.ly*', '*j.mp*', '*://bitly.com/*') > 0;
+		// We could also pick up branded short domains here if necessary (see https://bitly.com/pages/landing/branded-short-domains-powered-by-bitly)
+		// NOTE we ignore http://bit.ly/ as it's not a valid link for the purposes of the Clicks table.
+		UserTimelinefirst_expanded_url <> 'http://bit.ly/' AND WildMatch(UserTimelinefirst_expanded_url, '*://bit.ly/*', '*j.mp*', '*://bitly.com/*') > 0;
 
 ENDSUB
 ///$tab Get Bitly Stats
